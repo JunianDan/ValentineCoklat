@@ -595,10 +595,15 @@
         }
 
         // drawing functions
-        function onMouseDown(e) {
-          e.preventDefault();
-          isDrawing = true;
-        }
+     function onMouseDown(e) {
+  e.preventDefault();
+  isDrawing = true;
+
+  let rect = canvas.getBoundingClientRect();
+  lastX = e.clientX - rect.left;
+  lastY = e.clientY - rect.top;
+}
+
         function onMouseUp() {
           if (isDrawing) {
             isDrawing = false;
@@ -610,10 +615,19 @@
           e.preventDefault();
           drawScratch(e.clientX, e.clientY);
         }
-        function onTouchStart(e) {
-          e.preventDefault();
-          isDrawing = true;
-        }
+   function onTouchStart(e) {
+  e.preventDefault();
+  isDrawing = true;
+
+  let touch = e.touches[0];
+  if (!touch) return;
+
+  let rect = canvas.getBoundingClientRect();
+  lastX = touch.clientX - rect.left;
+  lastY = touch.clientY - rect.top;
+}
+
+
         function onTouchEnd(e) {
           e.preventDefault();
           if (isDrawing) {
@@ -621,26 +635,36 @@
             checkScratch();
           }
         }
-        function onTouchMove(e) {
-          if (!isDrawing) return;
-          e.preventDefault();
-          let touch = e.touches[0];
-          if (!touch) return;
-          drawScratch(touch.clientX, touch.clientY);
-        }
+    function onTouchMove(e) {
+  if (!isDrawing) return;
+  e.preventDefault();
 
-        function drawScratch(clientX, clientY) {
-          let now = Date.now();
-          if (now - lastScratchTime < 12) return;
-          lastScratchTime = now;
+  let touch = e.touches[0];
+  if (!touch) return;
 
-          let rect = canvas.getBoundingClientRect();
-          let x = clientX - rect.left;
-          let y = clientY - rect.top;
-          ctx.beginPath();
-          ctx.arc(x, y, 28, 0, Math.PI * 2);
-          ctx.fill();
-        }
+  drawScratch(touch.clientX, touch.clientY);
+}
+
+let lastX = 0;
+let lastY = 0;
+
+   function drawScratch(clientX, clientY) {
+  let rect = canvas.getBoundingClientRect();
+  let x = clientX - rect.left;
+  let y = clientY - rect.top;
+
+  ctx.lineWidth = window.innerWidth < 500 ? 25 : 40;
+  ctx.lineCap = "round";
+
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  lastX = x;
+  lastY = y;
+}
+
 
         // ----- CHECK SCRATCH PERCENTAGE -----
         function checkScratch() {
@@ -855,3 +879,4 @@
     </script>
   </body>
 </html>
+

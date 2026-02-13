@@ -525,21 +525,26 @@
         let valentineMsg = document.getElementById("valentineMessage");
 
         // ----- RESIZE CANVAS (responsive) -----
-        function resizeCanvas() {
-          if (!canvas) return;
-          let rect = canvas.getBoundingClientRect();
-          if (rect.width === 0 || rect.height === 0) return;
-          canvas.width = rect.width;
-          canvas.height = rect.height;
+   function resizeCanvas() {
+  if (!canvas) return;
 
-          if (!melted) {
-            ctx.fillStyle = "#4b1fa3";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.globalCompositeOperation = "destination-out";
-          } else {
-            ctx.globalCompositeOperation = "destination-out";
-          }
-        }
+  let rect = canvas.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) return;
+
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+
+  // 🔥 RESET MODE DULU
+  ctx.globalCompositeOperation = "source-over";
+
+  if (!melted) {
+    ctx.fillStyle = "#4b1fa3";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // 🔥 baru aktifkan mode scratch
+  ctx.globalCompositeOperation = "destination-out";
+}
 
         // ----- CREATE CHOCOLATE PIECES -----
         function createChocolatePieces() {
@@ -587,9 +592,7 @@
           ) {
             resizeCanvas();
             if (!melted) {
-              ctx.fillStyle = "#4b1fa3";
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              ctx.globalCompositeOperation = "destination-out";
+             
             }
           }
         }
@@ -879,4 +882,5 @@ let lastY = 0;
     </script>
   </body>
 </html>
+
 

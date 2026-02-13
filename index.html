@@ -742,52 +742,48 @@ let lastY = 0;
           }, 400);
         }
 
-        function createFlower() {
-          let effects = document.getElementById("effects");
-          let flower = document.createElement("div");
-          flower.className = "flower-particle";
-          // variety of valentine flower emojis / hearts
-          let symbols = [
-            "❤️",
-            "💕",
-            "🌺",
-            "🌹",
-            "💖",
-            "🌷",
-            "💞",
-            "🌸",
-            "💝",
-            "🌺",
-            "🌸",
-            "❣️",
-            "💗",
-            "💗",
-          ];
-          flower.innerHTML =
-            symbols[Math.floor(Math.random() * symbols.length)];
+function createFlower() {
+  let effects = document.getElementById("effects");
+  if (!effects) return;
 
-          // random size
-          let size = 20 + Math.floor(Math.random() * 32);
-          flower.style.fontSize = size + "px";
+  // 🔥 Batasi jumlah maksimal partikel aktif
+  if (effects.childElementCount > 25) return;
 
-          // random left position
-          flower.style.left = Math.random() * 100 + "%";
-          flower.style.top = "-10vh";
+  let flower = document.createElement("div");
+  flower.className = "flower-particle";
 
-          // random animation duration between 5s and 12s (slow, graceful)
-          let duration = 6 + Math.random() * 8;
-          flower.style.animation = `flowerFall ${duration}s linear forwards`;
+  let symbols = [
+    "❤️","💕","🌺","🌹",
+    "💖","🌷","💞","🌸",
+    "💝","❣️","💗"
+  ];
 
-          // slight random rotation start
-          flower.style.transform = `rotate(${Math.random() * 60}deg)`;
+  flower.innerHTML =
+    symbols[Math.floor(Math.random() * symbols.length)];
 
-          effects.appendChild(flower);
+  // 🔥 Size lebih kecil & ringan
+  let size = 14 + Math.floor(Math.random() * 18); 
+  flower.style.fontSize = size + "px";
 
-          // remove after animation ends (to avoid memory build)
-          setTimeout(() => {
-            if (flower.parentNode) flower.remove();
-          }, duration * 1100);
-        }
+  flower.style.left = Math.random() * 100 + "%";
+  flower.style.top = "-10vh";
+
+  // 🔥 Durasi lebih cepat (kurangi elemen aktif bersamaan)
+  let duration = 5 + Math.random() * 4;
+  flower.style.animation = `flowerFall ${duration}s linear forwards`;
+
+  flower.style.transform = `rotate(${Math.random() * 40}deg)`;
+
+  // 🔥 Optimasi GPU
+  flower.style.willChange = "transform";
+  flower.style.pointerEvents = "none";
+
+  effects.appendChild(flower);
+
+  setTimeout(() => {
+    flower.remove();
+  }, duration * 1000);
+}
 
         // heart confetti (small extra)
         function createHeart() {
@@ -882,6 +878,7 @@ let lastY = 0;
     </script>
   </body>
 </html>
+
 
 
 
